@@ -1,0 +1,26 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+  packages: read
+  statuses: write
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      # lints only files changed by the push/PR, so existing code is not flagged
+      - uses: super-linter/super-linter/slim@v9
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+          VALIDATE_SQLFLUFF: true
